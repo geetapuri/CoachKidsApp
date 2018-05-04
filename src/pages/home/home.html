@@ -1,0 +1,83 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            CoachKids
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+
+<ion-content padding>
+    <img src="assets/imgs/coach.png" class="logo">
+
+
+    <div padding>
+        <button ion-button block (click)="goToSchedule()">Schedule</button>
+    </div>
+
+    <ion-card *ngFor="let kid of kidsData" (click)="goToDetails(kid)">
+        <ion-card-header>
+            {{ kid.kidName }}
+        </ion-card-header>
+        <ion-card-content>
+            {{ kid.kidID }}
+        </ion-card-content>
+    </ion-card>
+
+    <div padding>
+        <button ion-button block (click)="goToAttendance()">Attendance</button>
+    </div>
+
+
+    <ion-card *ngFor="let kid of kidsData" (click)="goToDetails(kid)">
+        <ion-card-header>
+            {{ kid.kidName }}
+        </ion-card-header>
+        <ion-card-content>
+            {{ kid.kidID }}
+        </ion-card-content>
+    </ion-card>
+
+    <div padding>
+        <button ion-button block (click)="goToFees()">Fees</button>
+    </div>
+
+
+
+    <div padding>
+        <button ion-button block (click)="getKids()">Kids</button>
+    </div>
+
+    <div padding>
+        <button ion-button block (click)="goToManageGroups()">Groups</button>
+    </div>
+
+
+    <div padding>
+        <button ion-button block (click)="goToPerformance()">Performance</button>
+    </div>
+
+    <ion-card *ngFor="let kid of kidsData" (click)="goToDetails(kid)">
+        <ion-card-header>
+            {{ kid.kidName }}
+        </ion-card-header>
+        <ion-card-content>
+            {{ kid.kidID }}
+        </ion-card-content>
+    </ion-card>
+
+    <div padding>
+        <button ion-button block (click)="goToEvents()">Events</button>
+    </div>
+
+    <ion-card *ngFor="let kid of kidsData" (click)="goToDetails(kid)">
+        <ion-card-header>
+            {{ kid.kidName }}
+        </ion-card-header>
+        <ion-card-content>
+            {{ kid.kidID }}
+        </ion-card-content>
+    </ion-card>
+
+</ion-content>
