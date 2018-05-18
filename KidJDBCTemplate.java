@@ -54,7 +54,7 @@ public class KidJDBCTemplate implements KidDAO {
 		
 		if (resultOfQuery!=0) {
 			
-			String SQL2 = "Select * from Kid where GROUPOFKIDS_GROUPID = ? ";
+			String SQL2 = "Select * from KID where GROUPOFKIDS_GROUPID = ? ";
 			List<Kid> kids =  jdbcTemplateObject.query(SQL2, new Object[] {kid.getGroupID()}, new KidMapper());
 			
 			return kids;

@@ -15,10 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.mysql.jdbc.PreparedStatement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.integration.annotation.InboundChannelAdapter;
-import org.springframework.integration.annotation.Poller;
+
 
 
 public class AttendanceJDBCTemplate implements AttendanceDAO{
@@ -51,7 +48,7 @@ private static Logger logger = LogManager.getLogger(AttendanceJDBCTemplate.class
 		
 	
 		
-		String SQL = "insert into Attendance (DateOfAttendance, GROUPOFKIDS_GroupID, KID_KidID, PresentAbsent) "
+		String SQL = "insert into ATTENDANCE (DateOfAttendance, GROUPOFKIDS_GroupID, KID_KidID, PresentAbsent) "
 				+ " values (?,?,?,?) "
 				+ " ON DUPLICATE KEY UPDATE " 
 				+ " PRESENTABSENT= values(PRESENTABSENT)";

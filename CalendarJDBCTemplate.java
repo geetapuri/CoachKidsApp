@@ -33,11 +33,11 @@ public List<Schedule> getSchedule(Date date) {
 	
 	logger.info("date to be queried = " + date);
 
-	String SQL = "select Calendar.Time AS TIME, Calendar.Date As Date, Calendar.CalendarID As CalendarID,  "
-			+ "GroupOfKids.GroupName AS GroupName, GroupOfKids.GroupID AS GroupID "
-			+ "from Calendar, GroupOfKids "
-			+ "where Calendar.GroupOfKids_GroupID = GroupOfKids.GroupID "
-			+ "AND Calendar.Date like ?";
+	String SQL = "select CALENDAR.Time AS TIME, CALENDAR.Date As Date, CALENDAR.CalendarID As CalendarID,  "
+			+ "GROUPOFKIDS.GroupName AS GroupName, GROUPOFKIDS.GroupID AS GroupID "
+			+ "from CALENDAR, GROUPOFKIDS "
+			+ "where CALENDAR.GroupOfKids_GroupID = GROUPOFKIDS.GroupID "
+			+ "AND CALENDAR.Date like ?";
 	
     List <Schedule> schedule = jdbcTemplateObject.query(SQL, new Object[] {date},new CalendarMapper());
     
@@ -54,7 +54,7 @@ public List<Schedule> getSchedule() {
 	
 	String SQL = "select C.CalendarID, C.Date, C.Time, " + 
 			"		G.GroupID, G.GroupName	" + 
-			"from Calendar C, GROUPOFKIDS G " + 
+			"from CALENDAR C, GROUPOFKIDS G " + 
 			"where C.GroupOFKIDS_GroupID = G.GroupID" +
 			" ORDER BY C.Date DESC";
 	
@@ -76,7 +76,7 @@ public String addSchedule(Schedule schedule) {
 	
 	if (resultOfQuery!=0) {
 		
-		String SQL2 = "INSERT into Attendance (DateOfAttendance, GROUPOFKIDS_GroupID, " + 
+		String SQL2 = "INSERT into ATTENDANCE (DateOfAttendance, GROUPOFKIDS_GroupID, " + 
 				" KID_KidID, PresentAbsent) SELECT  ?, ?, KIDID , 'A' " + 
 				" FROM KID where KID.GROUPOFKIDS_GroupID = ? ";
 		
