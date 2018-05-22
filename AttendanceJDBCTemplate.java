@@ -134,8 +134,8 @@ private static Logger logger = LogManager.getLogger(AttendanceJDBCTemplate.class
 		// TODO Auto-generated method stub
 		
 		
-		String SQL = "SELECT * FROM ATTENDANCE WHERE KID_KIDID=? ORDER BY "
-				+ " dateofattendance DESC" ;
+		String SQL = "SELECT * FROM ATTENDANCE WHERE KID_KidID=? ORDER BY "
+				+ " DateOfAttendance DESC" ;
 		
 	    List <Attendance> attendance = jdbcTemplateObject.query(SQL,new Object[] 
 	    		{data.getKidID() },new AttendanceMapper());
