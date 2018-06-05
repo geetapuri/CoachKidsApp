@@ -150,10 +150,12 @@ public class CoachAppApplication {
 		
 		@CrossOrigin(origins= "*")
 		@RequestMapping("/resourceLogin")
-		public Principal user(Principal user) {
+		public @ResponseBody Map<String,Object> user( Principal user) {
+			Map<String,Object> model = new HashMap<String,Object>();
 			   logger.info("First use of logger! user = "+ user.getName());
+			   model.put("user", user);
     
-			   return user;
+			   return model;
 		  }	
 		
 	
