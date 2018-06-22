@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,8 +16,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -29,10 +30,12 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -61,12 +64,16 @@ public class CoachAppApplication {
 	
 	
 	@Configuration
+	
+	
 	@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-	  public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+	  public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 	    public void addCorsMappings(CorsRegistry registry) {
 	        registry.addMapping("/**");
 	    }
+	    
+	    
 		
 		@Override
 	    protected void configure(HttpSecurity http) throws Exception {
@@ -96,14 +103,19 @@ public class CoachAppApplication {
 	          .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 	        		.antMatchers("/calendar.html").hasRole("USER")
 	        		.antMatchers("/manageClasses.html").hasRole("ADMIN")
-	          .anyRequest().fullyAuthenticated().and()
-	          
+	          .anyRequest().permitAll().and()
+	          .formLogin().loginPage("/login")
+	          .usernameParameter("username").passwordParameter("password")
+	        .and()
+	          	
 	          .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
 	          
 	          
 	          
 	          ;
 	    }
+		
+		
 		
 		
 		
@@ -127,15 +139,33 @@ public class CoachAppApplication {
 		        }
 		    }
 		}
-
+	
 		
-	    @Override
+		@Autowired
+		DataSource dataSource;
+		
+	    @Autowired
 	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	    	System.out.println("Inside configure- authentication manager builder");
-	    		auth
-	    			.inMemoryAuthentication()
-	    				.withUser("user1").password("password").roles("USER").and()
-	    				.withUser("admin").password("password").roles("USER", "ADMIN");
+	    	System.out.println("Inside configure- authentication manager  builder");
+	    	
+	      		
+		//instead of in memory Auth, using jdbc Auth now
+	    		logger.info("inside configure");
+	    		auth  
+	    		/*.inMemoryAuthentication()
+				.withUser("user1").password("password").roles("USER").and()
+				.withUser("geeta").password("password").roles("ADMIN").and()
+				.withUser("admin").password("password").roles("USER", "ADMIN");*/
+	    			.jdbcAuthentication().dataSource( dataSource)
+	    				.usersByUsernameQuery(
+	    						"select username, password, enabled from users where username=?"
+	    						)
+	    				.authoritiesByUsernameQuery(
+	    						"select username, role from user_roles where username=?"
+	    						);
+	    				//.passwordEncoder(new BCryptPasswordEncoder());
+	    				
+	    	
 	    		
 	    }
 	  }
@@ -250,6 +280,34 @@ public class CoachAppApplication {
 		         context.getBean(CalendarJDBCTemplate.class);
 		
 	   List<Schedule> schedule = calendarJDBCTemplate.getSchedule();
+	    
+	    model.put("Schedule", schedule);
+	    
+	    context.close();
+	    return model;
+	    
+	  }
+	
+	@RequestMapping("/getCalendarAllKid")
+	public @ResponseBody Map<String,Object> getCalendarAllParent(@RequestBody Schedule data) {
+		//String name;
+	    Map<String,Object> model = new HashMap<String,Object>();
+	    
+	    
+	    
+	    //Date date = data.getDate();
+	   //logger.info("First use of logger! date = "+ date);
+		
+		//System.out.println("Date is "+ date);
+	    //ToDO 
+	    // get the date and do a search in db based on date
+	    FileSystemXmlApplicationContext context = 
+				new FileSystemXmlApplicationContext("BeanForCoach.xml");
+	
+	    CalendarJDBCTemplate  calendarJDBCTemplate = 
+		         context.getBean(CalendarJDBCTemplate.class);
+		
+	   List<Schedule> schedule = calendarJDBCTemplate.getSchedule(data);
 	    
 	    model.put("Schedule", schedule);
 	    
@@ -513,6 +571,31 @@ public class CoachAppApplication {
 		
 	    //List<Kids> kids = kidsJDBCTemplate.listAllKids();
 		List<Kid> kids = kidJDBCTemplate.getKids( );
+	    
+	    model.put("kidList", kids);
+	    //model.put("content", "Hello World");
+	    
+	    context.close();
+	    return model;
+	    
+	  }
+
+	@RequestMapping("/getKidInfoParent")
+	public @ResponseBody Map<String,Object> getKidInfoParent(@RequestBody Kid data) {
+		//String name;
+	    Map<String,Object> model = new HashMap<String,Object>();
+	    String parentID = data.getParentID();
+	  
+	  logger.info("Kid List to be obtained");
+	  
+	  FileSystemXmlApplicationContext context = 
+				new FileSystemXmlApplicationContext("BeanForCoach.xml");
+	
+	    KidJDBCTemplate  kidJDBCTemplate = 
+		         context.getBean(KidJDBCTemplate.class);
+		
+	    //List<Kids> kids = kidsJDBCTemplate.listAllKids();
+		List<Kid> kids = kidJDBCTemplate.getKidsParent(parentID );
 	    
 	    model.put("kidList", kids);
 	    //model.put("content", "Hello World");

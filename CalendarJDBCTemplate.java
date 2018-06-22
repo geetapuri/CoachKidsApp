@@ -66,6 +66,28 @@ public List<Schedule> getSchedule() {
 }
 
 @Override
+public List<Schedule> getSchedule(Schedule schedule) {
+	// TODO Auto-generated method stub - query for finding the schedule based on date
+	logger.info("Calling getSchedule()  ");
+	
+	String kidID = schedule.getKidID();
+	
+	String SQL = "select C.CalendarID, C.Date, C.Time, " + 
+			"		G.GroupID, G.GroupName, K.KidID	" + 
+			"from CALENDAR C, GROUPOFKIDS G , KID K " + 
+			"where C.GroupOFKIDS_GroupID = G.GroupID " + 
+			" And K.GroupOfKids_GroupID = G.GroupID " + 
+			"	And K.KidID = ? " +
+			" ORDER BY C.Date DESC";
+	
+    List <Schedule> returnSchedule = jdbcTemplateObject.query(SQL,new Object[] {kidID}, new CalendarMapper());
+    
+   
+    return returnSchedule;
+	
+}
+
+@Override
 public String addSchedule(Schedule schedule) {
 	String SQL = "INSERT INTO CALENDAR (GROUPOFKIDS_GROUPID, TIME, DATE) VALUES (?,?,?)";
 	logger.info("inserting DATE as : " + schedule.getDate());

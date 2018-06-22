@@ -9,6 +9,21 @@ public class Kid {
 		private String packageName;
 		private String groupName;
 		
+		public String getCoachID() {
+			return coachID;
+		}
+		public void setCoachID(String coachID) {
+			this.coachID = coachID;
+		}
+		private String parentID;
+		private String coachID;
+		
+		public String getParentID() {
+			return parentID;
+		}
+		public void setParentID(String parentID) {
+			this.parentID = parentID;
+		}
 		public String getPackageName() {
 			return packageName;
 		}
