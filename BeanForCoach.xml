@@ -13,6 +13,7 @@
       <property name = "driverClassName" value = "com.mysql.jdbc.Driver"/>
       
        <property name = "url" value = "jdbc:mysql://google/coachKidsDB?cloudSqlInstance=coachingapp-203705:asia-southeast1:coachkids&amp;socketFactory=com.google.cloud.sql.mysql.SocketFactory&amp;user=root&amp;password=1234&amp;useSSL=false"/>
+      									
       <!-- <property name = "username" value = "root"/>
       <property name = "password" value = "1234"/>-->
     </bean>
@@ -26,6 +27,12 @@
    <!-- Definition for kidJDBCTemplate bean -->
    <bean id = "kidJDBCTemplate" 
       class = "com.example.demo.KidJDBCTemplate" >
+      <property name="dataSource" ref="dataSource" />    
+   </bean>
+   
+   <!-- Definition for parentDBCTemplate bean -->
+   <bean id = "parentJDBCTemplate" 
+      class = "com.example.demo.ParentJDBCTemplate" >
       <property name="dataSource" ref="dataSource" />    
    </bean>
    
