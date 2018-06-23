@@ -508,6 +508,30 @@ public class CoachAppApplication {
 	    
 	  }
 	
+	@RequestMapping("/getParentID")
+	public @ResponseBody Map<String,Object> getParentID(@RequestBody Parent data) {
+		//String name;
+	    Map<String,Object> model = new HashMap<String,Object>();
+	  
+	  logger.info("ParentID  to be searched for parent =  " + data.getParentName());
+	  
+	  FileSystemXmlApplicationContext context = 
+				new FileSystemXmlApplicationContext("BeanForCoach.xml");
+	
+	    ParentJDBCTemplate  parentJDBCTemplate = 
+		         context.getBean(ParentJDBCTemplate.class);
+		
+	    //List<Kids> kids = kidsJDBCTemplate.listAllKids();
+		List<Parent> parent = parentJDBCTemplate.getParentID( data);
+	    
+	    model.put("parent", parent);
+	    //model.put("content", "Hello World");
+	    
+	    context.close();
+	    return model;
+	    
+	  }
+	
 	@RequestMapping("/getGroups")
 	public @ResponseBody Map<String,Object> getGroups(@RequestBody GroupOfKids data) {
 		//String name;

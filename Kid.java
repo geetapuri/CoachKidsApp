@@ -8,6 +8,8 @@ public class Kid {
 		private String present;
 		private String packageName;
 		private String groupName;
+		private String parentID;
+		private String coachID;
 		
 		public String getCoachID() {
 			return coachID;
@@ -15,8 +17,7 @@ public class Kid {
 		public void setCoachID(String coachID) {
 			this.coachID = coachID;
 		}
-		private String parentID;
-		private String coachID;
+		
 		
 		public String getParentID() {
 			return parentID;
